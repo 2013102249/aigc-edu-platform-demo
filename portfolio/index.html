@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品经理作品集</title>
+<style>
+  :root{
+    --purple:#7C3AED;--purple-d:#5B21B6;--purple-soft:#EDE4FF;
+    --blue:#2563EB;--blue-d:#1D4ED8;--blue-soft:#E0EBFF;
+    --teal:#0D9488;--teal-soft:#CCFBF1;
+    --amber:#D97706;--amber-soft:#FEF3C7;
+    --rose:#E11D48;--rose-soft:#FFE4E6;
+    --green:#059669;--green-soft:#D1FAE5;
+    --gray:#6B7280;--gray-soft:#F3F4F6;
+    --ink:#1F2430;--muted:#667085;--line:#E5E7EB;--bg:#F7F7FB;--card:#FFFFFF;
+    --shadow:0 6px 24px rgba(124,58,237,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* Hero */
+  .hero{background:linear-gradient(135deg,#7C3AED 0%,#5B21B6 45%,#2563EB 100%);color:#fff;padding:52px 0 46px;position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;right:-80px;top:-120px;width:340px;height:340px;border-radius:50%;
+    background:rgba(255,255,255,.08)}
+  .hero .wrap{position:relative;z-index:1}
+  .kicker{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+    font-size:12px;font-weight:700;letter-spacing:1px;padding:5px 14px;border-radius:999px;margin-bottom:16px}
+  .hero h1{font-size:34px;line-height:1.25;margin-bottom:10px;letter-spacing:-.5px}
+  .hero .sub{font-size:16px;opacity:.92;max-width:760px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .legend span{font-size:11px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+    padding:4px 10px;border-radius:999px}
+
+  /* Nav */
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+  nav .wrap::-webkit-scrollbar{display:none}
+  nav a{white-space:nowrap;font-size:13px;font-weight:600;color:var(--muted);padding:13px 14px;border-bottom:2px solid transparent}
+  nav a:hover{color:var(--purple);border-bottom-color:var(--purple)}
+
+  /* Sections */
+  section{padding:38px 0 6px;scroll-margin-top:56px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .sec-no{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:var(--purple-soft);color:var(--purple);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .sec-head h2{font-size:21px;letter-spacing:-.3px}
+  .sec-head .en{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+    padding:20px 22px;margin-bottom:14px}
+  .h3{font-size:15px;font-weight:800;color:var(--purple-d);margin:4px 0 10px;display:flex;align-items:center;gap:8px}
+  .h3:before{content:"";width:4px;height:15px;border-radius:2px;background:var(--purple)}
+  .p{font-size:14px;color:#374151;margin-bottom:8px;word-break:break-word}
+  .p:last-child{margin-bottom:0}
+
+  /* Evidence chips (auto from [xxx]) */
+  .ev{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;vertical-align:middle;margin:0 1px}
+  .ev-real{background:var(--green-soft);color:#047857}
+  .ev-sim{background:var(--blue-soft);color:var(--blue-d)}
+  .ev-est{background:var(--amber-soft);color:#B45309}
+  .ev-hyp{background:var(--gray-soft);color:#4B5563}
+
+  /* Table */
+  .tbl-wrap{overflow-x:auto;margin:6px 0 4px;border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:520px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--purple-soft);color:var(--purple-d);font-weight:700;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  tr:nth-child(even) td{background:#FBFAFE}
+
+  /* Cards row */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:6px 0}
+  .mini{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:10px;padding:13px 14px;background:#fff}
+  .mini.purple{border-left-color:var(--purple)} .mini.teal{border-left-color:var(--teal)}
+  .mini.amber{border-left-color:var(--amber)} .mini.rose{border-left-color:var(--rose)}
+  .mini .tag{display:inline-block;font-size:10px;font-weight:700;color:var(--muted);background:var(--gray-soft);
+    padding:2px 7px;border-radius:5px;margin-bottom:6px}
+  .mini .t{font-weight:800;font-size:14px;margin-bottom:4px}
+  .mini .b{font-size:12.5px;color:#4B5563}
+
+  /* KV */
+  .kv{display:grid;grid-template-columns:130px 1fr;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .kv .k,.kv .v{padding:9px 12px;font-size:13px;border-bottom:1px solid var(--line)}
+  .kv .k{background:#FAFAFC;font-weight:700;color:var(--muted)}
+  .kv .v{color:#374151}
+  .kv .k:last-of-type,.kv .v:last-of-type{border-bottom:0}
+
+  /* Callout */
+  .callout{border-radius:10px;padding:12px 14px;font-size:13px;margin:6px 0;border-left:4px solid var(--blue);background:var(--blue-soft);color:var(--blue-d)}
+  .callout.warn{border-left-color:var(--amber);background:var(--amber-soft);color:#92400E}
+
+  /* Score strip */
+  .score-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:8px 0}
+  .score{border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:#fff}
+  .score .q{font-size:12px;color:var(--muted);font-weight:700}
+  .score .v{font-size:24px;font-weight:800;color:var(--purple);margin:2px 0}
+  .score .v small{font-size:12px;color:var(--muted);font-weight:600}
+  .score .g{font-size:11.5px;color:#4B5563}
+
+  /* Details / PRD */
+  details{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff}
+  details summary{cursor:pointer;padding:11px 14px;font-weight:700;font-size:14px;color:var(--ink);list-style:none;
+    display:flex;align-items:center;gap:9px}
+  details summary::-webkit-details-marker{display:none}
+  details summary:before{content:"+";color:var(--purple);font-weight:800;font-size:17px;width:16px}
+  details[open] summary:before{content:"−"}
+  details .dbody{padding:0 14px 14px 39px}
+
+  /* ===== Map (scoped, from solution-map-template.html) ===== */
+  .map{font-size:13px}
+  .map .m-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .map .m-legend span{font-size:11px;color:#374151;background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:4px 10px;display:inline-flex;align-items:center;gap:6px}
+  .map .m-legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .map .m-panel{background:#FAFAFC;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+  .map .m-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:.3px}
+  .map .m-flow{display:flex;align-items:stretch;overflow-x:auto}
+  .map .m-zone{flex:1;min-width:130px;display:flex;flex-direction:column}
+  .map .m-zh{color:#fff;text-align:center;font-size:12.5px;font-weight:700;padding:8px 4px;border-radius:8px 8px 0 0}
+  .map .m-zb{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;
+    padding:10px 8px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .map .m-node{background:#fff;border:1px solid var(--line);border-left-width:4px;border-radius:7px;
+    padding:8px 9px;font-size:12px;white-space:pre-line}
+  .map .m-chip{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-bottom:4px}
+  .map .m-arrow{flex:0 0 22px;display:flex;align-items:center;justify-content:center}
+  .map .m-arrow:before{content:"";width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:9px solid #9CA3AF}
+  .map .zp{background:var(--purple)} .map .np{border-left-color:var(--purple)} .map .cp{background:var(--purple-soft);color:var(--purple)}
+  .map .zb{background:var(--blue)} .map .nb{border-left-color:var(--blue)} .map .cb{background:var(--blue-soft);color:var(--blue)}
+  .map .zt{background:var(--teal)} .map .nt{border-left-color:var(--teal)} .map .ct{background:var(--teal-soft);color:var(--teal)}
+  .map .za{background:var(--amber)} .map .na{border-left-color:var(--amber)} .map .ca{background:var(--amber-soft);color:var(--amber)}
+  .map .zr{background:var(--rose)}
+  .map .m-fb{background:var(--rose-soft);border:1px dashed var(--rose);border-radius:11px;padding:13px}
+  .map .m-fb-t{font-size:12px;font-weight:700;color:var(--rose);margin-bottom:10px}
+  .map .m-fb-flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .map .m-fb-node{background:#fff;border:1px solid var(--rose);color:#9F1239;border-radius:7px;padding:6px 10px;font-size:12px}
+  .map .m-back{margin-top:9px;font-size:11.5px;color:#9F1239;font-weight:700}
+  .map .m-metrics{background:var(--blue-soft);border:1px dashed var(--blue);border-radius:11px;padding:13px}
+  .map .m-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .map .m-item{background:#fff;border:1px solid var(--blue);border-radius:8px;padding:8px 10px;font-size:11.5px;flex:1 1 140px}
+  .map .m-item .m-layer{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-bottom:4px}
+  .map .le{background:#EDE4FF;color:var(--purple)} .map .lx{background:#CCFBF1;color:var(--teal)} .map .lb{background:#FEF3C7;color:var(--amber)}
+  .map .m-item .m-n{font-weight:700;display:block} .map .m-item .m-p{color:var(--muted)}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:34px 20px 40px}
+  .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+  .cta-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#5B21B6;font-weight:800;
+    font-size:14px;padding:11px 20px;border-radius:11px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  .cta-btn.ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:none}
+  .cta-btn:hover{transform:translateY(-1px)}
+  @media(max-width:820px){
+    .hero{padding:38px 0 32px} .hero h1{font-size:26px}
+    section{padding-top:30px} .sec-head h2{font-size:18px}
+    .card{padding:16px} .kv{grid-template-columns:100px 1fr}
+    .map .m-flow{flex-direction:column}
+    .map .m-arrow{height:20px;flex:0 0 20px}
+    .map .m-arrow:before{border-left:6px solid transparent;border-right:6px solid transparent;
+      border-top:9px solid #9CA3AF;border-bottom:0}
+    .map .m-zb{flex-direction:row;flex-wrap:wrap} .map .m-node{flex:1 1 130px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker" id="kicker">AI 产品经理作品集</span>
+    <h1 id="title">项目名</h1>
+    <p class="sub" id="subtitle">一句话说清项目：谁在什么场景下用，解决什么问题，效果如何</p>
+    <div class="legend">
+      <span>证据标注</span>
+      <span>[真实] 有数据/日志</span><span>[仿真] 样例集跑分</span>
+      <span>[估算] 行业基准推算</span><span>[假设] 待确认</span>
+    </div>
+    <div class="cta">
+      <a class="cta-btn" href="https://2013102249.github.io/aigc-edu-platform-demo/" target="_blank" rel="noopener">▶ 打开可点击 Demo（五端闭环 · 演示模式）</a>
+      <a class="cta-btn ghost" href="https://aigc-edu-platform.app.workbuddy.host/" target="_blank" rel="noopener">完整云端版 · 真实登录与 LLM 调用</a>
+    </div>
+  </div>
+</header>
+
+<nav><div class="wrap" id="nav"></div></nav>
+
+<main class="wrap">
+  <section id="s1"><div class="sec-head"><div class="sec-no">1</div><div><h2>项目概览</h2><div class="en">Overview &amp; Self-check</div></div></div><div id="b1"></div></section>
+  <section id="s2"><div class="sec-head"><div class="sec-no">2</div><div><h2>作品设计文档</h2><div class="en">Design Doc</div></div></div><div id="b2"></div></section>
+  <section id="s3"><div class="sec-head"><div class="sec-no">3</div><div><h2>可审阅 PRD</h2><div class="en">PRD</div></div></div><div id="b3"></div></section>
+  <section id="s4"><div class="sec-head"><div class="sec-no">4</div><div><h2>综合方案图</h2><div class="en">Solution Map</div></div></div><div class="card map" id="map"></div></section>
+  <section id="s5"><div class="sec-head"><div class="sec-no">5</div><div><h2>评测方案</h2><div class="en">Evaluation</div></div></div><div id="b5"></div></section>
+</main>
+
+<footer>AI 产品经理作品集 · 单文件页面，可离线打开 · 证据分级：真实 / 仿真 / 估算 / 假设</footer>
+
+<script>
+/* ============================================================
+   填充说明：只修改 CONFIG 一个对象，无需改动 HTML / CSS / 渲染逻辑。
+   ------------------------------------------------------------
+   顶层字段：
+     kicker, title, subtitle —— 页头文字
+     nav —— 导航项 [{id:"s1",label:"项目概览"}, ...]，与 section id 对应
+     b1 项目概览 / b2 设计文档 / b3 PRD / b5 评测方案 —— 内容块数组 blocks
+     map —— 综合方案图配置（见下方 MAP 说明）
+
+   blocks 支持的 type（按需组合，顺序即渲染顺序）：
+     {type:"h",   text:"小标题"}
+     {type:"p",   text:"段落，可用 \\n 换行；[真实]/[仿真]/[估算]/[假设] 自动变彩色标签"}
+     {type:"table", head:["列1","列2"], rows:[["值1","值2"], ...]}
+     {type:"cards", color:"purple|blue|teal|amber|rose", items:[
+         {tag:"小标签", title:"标题", body:"正文"}]}
+     {type:"kv",  items:[{k:"键", v:"值"}]}
+     {type:"callout", tone:"tip|warn", text:"提示文字"}
+     {type:"score", items:[{q:"Q1 问题定义", score:"2/2", gap:"缺口说明"}]}
+     {type:"details", title:"章节名", open:true|false,
+         blocks:[ ...可嵌套上述任意 block... ]}
+
+   禁止：在 CONFIG 任何字段写入内部备战材料（备课笔记、应答草稿等）——
+   对外页面只保留可正面展示的项目内容。
+   ============================================================ */
+const CONFIG = {
+  kicker: "AI 产品经理作品集",
+  title: "弗露化成 · AIGC 职业技能教培平台",
+  subtitle: "面向 AI 绘画 / AI 视频 / AI 漫剧转岗人群的教培平台：以「工作流」为核心的 AI 影视创作工作台，把看课—跟练—作业—点评—作品—变现闭环落到一个产品。PRD 从 0 到 1 编写，平台已上线可点（顶部可直达 Demo）。",
+  nav: [
+    {id:"s1", label:"项目概览"}, {id:"s2", label:"设计文档"}, {id:"s3", label:"PRD"},
+    {id:"s4", label:"方案图"}, {id:"s5", label:"评测方案"}
+  ],
+  b1: [
+    {type:"callout", tone:"tip", text:"可点击 Demo：https://2013102249.github.io/aigc-edu-platform-demo/（五端闭环，演示模式免登录）｜ 完整云端版：https://aigc-edu-platform.app.workbuddy.host/（真实注册登录 + LLM 调用）\n两个版本功能一致；Demo 的 AI 生成结果为预置样例，工作台四步流程、作业快照、教师点评链路均真实可走。"},
+    {type:"score", items:[
+      {q:"Q1 问题定义", score:"2/2", gap:"PRD 已有五类用户画像、场景与定性痛点；补全后痛点改为可观察可归因写法"},
+      {q:"Q2 指标体系", score:"1/2", gap:"PRD 第二章有六项业务指标，但目标值全部「待确认」；已补 AI 链路三层指标与口径"},
+      {q:"Q3 评测方案", score:"0/2", gap:"PRD 完全没有评测章节；已补齐评测集 / 通过线 / 回归 / bad case 闭环"},
+      {q:"Q4 bad case 迭代", score:"1/2", gap:"PRD 第六章有异常与边界表（兜底动作齐全），但无 bad case 分类与迭代记录；已补"}
+    ]},
+    {type:"h", text:"现有资产盘点"},
+    {type:"table", head:["项","已有 / 薄弱 / 缺失 / 矛盾","处理方式"], rows:[
+      ["目标用户与场景","已有：五类用户画像与核心问题表 [真实]（PRD 1.2 用户调研定性结论）","保留深化：区分主/次用户，补触发场景与决策权"],
+      ["痛点","薄弱：定性描述（「不知道从哪学」「无法规模化点评」），缺可观察证据","按固定结构重写（学员/教师双痛点），数据来源标注"],
+      ["方案与功能","已有：六大模块功能需求表 + 可点击 Demo 已实现 [真实]（Demo 与 PRD 逐条对照过）","与 Demo 对齐核对，MVP 边界沿用 PRD 3.2 非目标"],
+      ["技术选型","缺失：PRD 仅写「不绑定单一模型，管理端网关可切换」 [真实]，未写选型权衡","新增工作流 vs Agent vs RAG vs MCP 决策与否决理由"],
+      ["指标体系","已有六项业务指标（留存/完课率/题库使用率/提交点评率/付费转化/作品产出率）[真实]","补 AI 链路效果/体验指标与口径，目标值分档标注"],
+      ["评测与 bad case","缺失","新增完整评测方案（板块 5）"],
+      ["矛盾项","PRD 指标目标值「待首月回写」与平台已上线状态并存","按 PRD 约定处理：目标值标 [假设]，首月数据回写机制写入 PRD 第 2 章"]
+    ]},
+    {type:"h", text:"补全路线图（按投入产出比排序）"},
+    {type:"p", text:"① 先补 Q2/Q1：痛点可观察化 + 指标口径（面试最常问，成本最低）→ ② 再补 Q4：bad case 分类分级与迭代闭环 → ③ 最后做 Q3 完整评测方案（评测集 / 通过线 / 回归）。本页五个板块即为补全后的完整证据链。"}
+  ],
+  b2: [
+    {type:"h", text:"背景与痛点"},
+    {type:"p", text:"背景：公司围绕 AIGC 技术构建「培训赋能—内容创作—技术支撑—生态孵化」四大板块，职业技能培训是核心业务。AIGC 技能培训市场普遍存在「工具多、路径散」：课程平台只管播视频，练琴式的 AI 工具练习散落在各类第三方产品里，作业靠微信群提交。[真实]（PRD 1.1 业务背景）"},
+    {type:"p", text:"痛点一（学员 · 固定结构）：想通过 AIGC 技能就业/副业的学员，在【报名课程后要产出可投递作品】的场景下要完成【看课 → 跟练 → 出作业 → 拿点评 → 出作品集】的任务，现在的做法是【课程平台看视频 + 自己去第三方 AI 工具练习（自行注册、付费、无课程对应模板）+ 微信群交作业】，但会出现【跟练链路在第三方工具处断裂：工具参数与课程不对应、生成上下文丢失、老师无法对照学员当时的生成环境点评】，根因是【课程、工具、题库、作业、变现通道彼此割裂，生成上下文（提示词/参数/模型版本）没有被作为一等公民记录]。[真实]（PRD 1.2 定性调研；「链路断裂导致的流失比例」数字待首月数据 [假设]）"},
+    {type:"p", text:"痛点二（教师）：助教在【批改学员作业】场景要完成【给出可执行的修改建议】，旧流程是【学员截图 + 口头描述参数】，但会出现【无法复现学员当时的生成环境，点评只能泛泛而谈，规模化点评不可行】，根因是【作业不含生成快照，模型升级后环境更不可追溯]。[真实]（PRD 1.2 教师画像；PRD 第六章「模型下线/升级」异常条目即由此推导）"},
+    {type:"h", text:"目标用户与场景"},
+    {type:"table", head:["角色","类型","经验水平","使用频率","决策权","触发场景"], rows:[
+      ["学员（求职/副业导向）","主用户","AI 新手为主，来自设计/测试等跨行业","每日 1-2 次（学习周期 4-8 周）","采纳结果（是否用推荐参数、是否发布作品）","看完一节课想立刻跟练；结课想出作品集"],
+      ["教师 / 助教","主用户","AIGC 实战经验，教研出身","每日批量批改","点评决策权（打分、建议直接生效）","作业提交后 48h 内批改；备课时沉淀模板"],
+      ["机构运营 / 教研","次用户","熟悉课程产品","每周配置","配置决策权（上下架/排期/题库）","课程更新、题库扩充、优惠券配置"],
+      ["增长运营","次用户","投放与转化","每日看漏斗","渠道预算决策权","落地页改版、优惠券投放、归因复盘"],
+      ["政企 / B 端客户","次用户","采购方管理员","低频","租户内管理权","开通独立租户、分配模型额度"]
+    ]},
+    {type:"p", text:"主路径（学员）：选课 → 看课（断点续播/倍速）→ 课时页「一键跟练」自动带入提示词模板与参数 → 工作台四步（剧本解析 → 分镜生成 → 一致性锁定 → 合成导出）→ 提交作业（自动快照）→ 教师点评（通知触达）→ 作品广场发布 / 投稿。与 PRD 5.1-5.2 及板块 4 方案图主干一一对应。[真实]（Demo 已实现全链路）"},
+    {type:"h", text:"方案与 MVP 边界"},
+    {type:"p", text:"产品形态：Web + H5 在线平台（暂无原生 App），四端一体：学员学习端 / 教师授课端 / 机构管理端 / 营销转化端，内嵌 AI 影视创作工作台。[真实]\n核心功能（输入 → 处理 → 输出）：\n① 课程学习：课时树（锁课解锁）+ 视频播放器 → 播放进度每 5 秒上报 → 掌握度画像与完课数据。\n② AI 工作台：粘贴剧本 → LLM 按 JSON Schema 解析场次/角色/道具（人工可修正）→ 逐场次生成分镜（拖拽排序/单镜重生成）→ 角色参考图库锁定 → 按分镜合成 → 快照记录提示词/参数/模型版本。\n③ 作业与点评：工作台产出或课时作业 → 提交（含生成快照）→ 教师批改工作台打分+点评（评语模板）→ 学员通知触达。\n④ 作品与变现：发布作品（二次确认+内容安全检查）→ 作品广场 → 投稿/接单入口与作品集导出。\n⑤ 营销转化：落地页组件化 + 试听预约 + 优惠券 + 渠道归因（首次/末次双记录）→ 线索表可导出。"},
+    {type:"p", text:"MVP 边界（明确不做，沿用 PRD 3.2）[真实]：不做对外售卖的通用 AIGC 创作 SaaS（与内容创作板块划清边界）；不做学员间私信/动态流（V1 仅作品广场与点评）；不在站内闭环交易（变现以投稿/接单跳转 + 作品集导出为主）；不做原生 App / PC 客户端；不做 K12 直播大班课。"},
+    {type:"h", text:"技术选型"},
+    {type:"cards", color:"purple", items:[
+      {tag:"主选型", title:"工作流（四步固定链路）", body:"负责 AI 影视链路全部环节：剧本解析 → 分镜生成 → 一致性控制 → 视频合成。\n选它的理由：四步的输入/输出与质量标准都可预定义；教学场景要求每步可点评、可复现、可审计（PRD 1.3 设计原则「教学闭环优先」）；模型调用次数可预算，额度按课程配置（PRD 8.2 成本风险）。\n否决了 Agent 自主规划：路径不固定 → 成本不可控、失败不可归因、学员作业不可复现——教育场景「稳定可讲评」优先于「灵活」。\n能力边界：开放性创作需求（不按分镜走）会僵化，届时提供自由模式作为轻量 Agent 入口（V2 规划 [假设]）。"},
+      {tag:"辅助选型", title:"结构化输出约束 + Prompt 模板版本化", body:"负责解析/分镜产出的工程可靠性。\n理由：下游（分镜表/一致性/合成）强依赖上游 JSON 结构，Schema 约束 + 代码侧容错提取（extractJson：剥离 markdown 围栏、截取首尾括号）把「格式违规」从不可控项变成可控项 [真实]（Demo 已实现）；模板带版本号与模型版本，满足 PRD「模型升级后旧模板仍可追溯」。\n否决了自由文本输出：下游解析脆弱、教师批改无对照基准。\n边界：无场次结构的散文体剧本无法硬解析，走「解析失败 → 引导补场次」兜底而非强行输出。"},
+      {tag:"边界决策", title:"有意不引入 RAG / MCP", body:"剧本解析与分镜生成不依赖外部知识库——质量标准由教研 few-shot 与输出 Schema 承载，引入 RAG 徒增知识库维护成本与检索延迟；平台 V1 无多外部系统对接需求，MCP 属过度设计。\n重估触发条件：当「优秀案例库」成为生成输入（教案式 RAG）或需要接入第三方创作工具链（如剪辑软件 API）时再评估。[假设]"}
+    ]},
+    {type:"p", text:"选型决策走查（按决策树）：Q1 答案是否依赖特定/私有知识？——否（解析靠剧本本身 + few-shot），不用 RAG。Q2 步骤是否固定可枚举？——是（四步链路 + 每步确认），选工作流。Q3 是否需自主调用多个外部工具？——否，不需要 Agent/MCP。"},
+    {type:"h", text:"指标体系（效果 / 体验 / 业务）"},
+    {type:"table", head:["指标","层","定义","口径（分子 / 分母 / 范围）","目标值","采集方式","坏例判定"], rows:[
+      ["场次拆分准确率","效果","剧本被正确拆为场次（边界+内容）的比例","正确剧本数 / 评测集剧本总数（60 条 [仿真]）","≥90% [假设]","仿真跑分 + 教研双人标注","漏拆 / 错并任一场次即坏例"],
+      ["分镜结构合规率","效果","分镜 JSON 含景别/机位/画面描述/时长且时长∈[1,15]s","合规分镜数 / 生成分镜总数","≥95% [假设]","仿真跑分（程序判定）","缺字段 / 时长越界 / 场次错位"],
+      ["分镜可用率","效果","人工判定可直接用作拍摄参考","可用分镜数 / 合规分镜数","≥80% [假设]","教研双人标注（分歧仲裁）","描述空洞 / 与场次情绪错位"],
+      ["一致性保持分","效果","跨分镜引用同一组角色参考与特征提示词的命中率","引用命中的分镜数 / 涉及已知角色分镜数","≥85% [假设]","日志埋点 + 抽样人工","参考库已锁定但生成未引用"],
+      ["合成成功率","效果","一次合成中全部分镜渲染成功的比例","成功合成次数 / 合成发起次数","≥92% [估算]（文生视频行业基准 ~90% 推算）","日志埋点（单镜重跑即计失败一次）","任一镜失败且重跑仍失败"],
+      ["解析首字延迟","体验","解析任务发起 → 首个可见结果的时长","P75 延迟，统计全部有效解析请求","≤3s [估算]","日志埋点","无 loading 反馈或超 10s 未响应"],
+      ["作业提交率 / 48h 点评率","业务","布置后 7 天内提交比例 / 提交后 48h 内被点评比例","提交作业数 / 布置作业数；按时点评数 / 提交数","提交 ≥70%、点评 ≥90% [假设]（首月回写）","数据库埋点","超期未交 / 超期未点评"],
+      ["单学员生成成本","业务","学员周期内模型调用成本","额度消耗合计 / 活跃学员数","≤课程毛利可承载阈值 [估算]","模型网关用量日志","超出课程配置额度"]
+    ]},
+    {type:"h", text:"价值与边界"},
+    {type:"kv", items:[
+      {k:"增量价值", v:"旧方案：学员从看课到第一次可点评产出需跨 ≥3 个工具、生成上下文丢失、点评无对照基准 [真实]（定性调研）。平台方案：跟练一键带入模板、快照完整可复现、点评有据 [真实]（Demo 已实现该链路）。作业提交率预期提升幅度待首月对照数据 [假设]。"},
+      {k:"适用边界", v:"适合：结构化教学、有明确交付物的技能培训、需要过程可审计的场景。不适合：开放探索型创作（工作流限制自由度）、无教研团队支撑的小机构（评测与模板依赖教研投入）。"},
+      {k:"风险与责任", v:"作品版权：用户协议定稿前已发布作品默认隐藏不强制删除（PRD 第六章）；内容安全：发布/提交前本地安全检查 + 疑似违规进人工审核队列，不直接公开；B 端：租户数据严格隔离，跨租户查询需显式授权留痕；点评必经人工，AI 不替代教师判断。"}
+    ]}
+  ],
+  b3: [
+    {type:"p", text:"基础 PRD（V1.0 评审稿）已含背景/用户/指标/功能需求/异常边界/非功能需求六章 [真实]；本章为 AI 产品特有章节补全。五类内容（产品逻辑 / 核心流程 / AI 组件 / 人工确认 / 异常兜底）均在正文落位，并与板块 4 方案图图文一致。基础 PRD 全文见作品集仓库 README 链接。"},
+    {type:"details", title:"1. 模型选型与理由", open:true, blocks:[
+      {type:"p", text:"AI 链路不绑定单一模型：剧本解析 / 分镜生成用文本推理模型（JSON 结构化输出），一致性控制用「参考图库 + 特征提示词锁定」的确定性机制（不依赖模型能力，靠流程约束保证），视频合成由生成模型按分镜逐镜出片。模型经管理端网关配置可切换，全部调用记录模型版本 [真实]（PRD 5.2 明确要求，Demo 已实现快照）。"},
+      {type:"p", text:"否决方案一：Agent 自主规划链路——教育场景要求可复现可讲评，路径不固定导致失败不可归因、成本不可预算，否决。否决方案二：端到端「剧本直出成片」单次生成——无法中间人工修正，错误成本高（整片重跑），且无法满足「解析结果人工可编辑」的教学诉求（PRD F-AI-01），否决。[假设]（基于教学场景约束推导，待真实课堂验证）"},
+      {type:"p", text:"调整机制：首月记录各环节实际质量与成本分布，若解析环节小模型达标即降级换便宜模型，合成环节保留最强模型——按环节分档选型而非全局统一。[假设]"}
+    ]},
+    {type:"details", title:"2. Prompt / 知识库策略", blocks:[
+      {type:"p", text:"解析 Prompt 设计：system 定义角色（专业剧本分析师）+ 硬约束（只输出 JSON，禁止多余文字）+ 输出 Schema（场次五要素：概要/场景/时间/情绪/角色/道具 + 角色卡）；user 侧对剧本截断 3000 字防超长 [真实]（Demo 实现即如此）。分镜 Prompt：场次五要素作为上下文 + 4-6 镜约束 + 景别/机位/台词/时长字段 Schema + temperature 0.7 保创意 [真实]。"},
+      {type:"p", text:"few-shot 策略：Schema 内嵌字段说明替代 few-shot（控制 token 成本）；嵌套场次（回忆/闪回）的边界规则以显式规则句写入 system [假设]（见板块 5 bad case #1 的迭代依据）。\n防注入：剧本内容为用户提供文本，通过「只输出 JSON + Schema 约束 + 内容安全词表前置检查」三层削弱注入面；文本不进入 system 消息 [真实]。\n知识库：V1 无 RAG 知识库；提示词模板库（带版本号与模型版本）由教师沉淀、学员一键复用（PRD F-AI-05），承担「优秀实践知识」的载体。"}
+    ]},
+    {type:"details", title:"3. 评测指标与失败兜底", blocks:[
+      {type:"p", text:"效果指标：场次拆分准确率 / 分镜结构合规率 / 分镜可用率 / 一致性保持分 / 合成成功率；体验指标：解析首字延迟、单镜端到端时长；业务指标：作业提交率 / 48h 点评率 / 单学员生成成本——口径与板块 2 指标体系、板块 5 指标定义表三处一致。"},
+      {type:"p", text:"bad case 分类：漏拆错并（场次）/ 角色幻觉 / 道具错标 / 分镜-场次错位 / JSON 格式违规 / 超时 / 内容越界（板块 5 分类法）。\n兜底策略（与 PRD 第六章异常表一致 [真实]）：生成失败/超时 → 工作台给出明确错误（不暴露内部堆栈）+「重试 / 换模型 / 保存草稿」三动作，已消耗额度按规则返还；合成失败 → 定位到具体分镜 + 单镜重跑；内容越界 → 本地安全词表前置拦截 + 疑似违规进人工审核队列不直接公开；模型下线/升级 → 作业快照保留当时模型版本与参数供教师复现。[真实]（Demo 均已实现对应动作）"}
+    ]},
+    {type:"details", title:"4. 人工确认节点", blocks:[
+      {type:"p", text:"节点一 · 解析结果人工修正：LLM 解析输出仅是草稿，学员可编辑场次概要/情绪/道具后才进入分镜生成（PRD F-AI-01「解析结果可人工编辑」）——设计理由：解析错误若不拦截会向下游放大，修正成本低于分镜重跑。[真实]\n节点二 · 教师点评：所有作业点评必经人工（AI 不自动打分）；点评写入 score/feedback 并通知学员。[真实]\n节点三 · 发布确认：作品发布到广场需二次确认弹窗，发布前过内容安全检查；疑似违规进人工审核队列，不直接公开（PRD 第六章）。[真实]"},
+      {type:"p", text:"决策权与超时：学员修正无超时（自主学习节奏）；教师点评超 48h 记入 48h 点评率并在看板曝光；人工审核队列由运营处理，V1 无 SLA 上限（标注为待完善项 [假设]）。不通过回流：审核不通过 → 作品保持私密 + 通知学员修改后重新提交。"}
+    ]},
+    {type:"details", title:"5. 成本与延迟", blocks:[
+      {type:"p", text:"成本量级 [估算]：解析/分镜为文本调用（每次约 0.5-2k tokens 输出），成本可控；视频合成为成本大头（按镜计）。控制机制：学员额度按课程配置、重生成次数有限制、管理端监控单学员单课程推理成本、失败按规则返还额度（PRD 8.2 风险应对全部落地）[真实]。"},
+      {type:"p", text:"延迟目标 [估算]：解析首字 ≤3s、单镜生成 ≤30s 端到端；体验规则：所有生成过程有明确 loading 反馈，不允许长时间白屏（PRD 非功能需求）[真实]。分层权衡：解析/分镜用达标即换的便宜模型（质量通过线兜底），合成保留最强模型——质量与成本按环节分档。"}
+    ]},
+    {type:"details", title:"6. 数据飞轮", blocks:[
+      {type:"p", text:"闭环路径：学员作业快照（提示词/参数/模型版本/输出）→ 教师点评与 bad case 标记 → 汇入评测集（失败维度）→ Prompt/参数迭代 → 回归通过后发布新模板 → 学员复用新模板。[真实]（快照与模板机制已实现，飞轮运转依赖运营节奏 [假设]）"},
+      {type:"p", text:"冷启动：无真实作业数据时，评测集由教研按课程大纲构造（60 条，见板块 5）+ 真实漫剧项目片段改写；上线后每月把新 bad case 回灌为「失败维度」样例，评测集从 60 条演进至 150+ 条 [假设]。"}
+    ]},
+    {type:"details", title:"7. 边界与责任", blocks:[
+      {type:"p", text:"AI 不做什么：不替代教师打分点评（点评必经人工）；不保证生成内容可商用（版权边界以用户协议为准，协议定稿前已发布作品默认隐藏）；不做开放创作（工作流边界明确，自由模式为 V2 规划项）。"},
+      {type:"p", text:"合规红线：生成内容提交/发布前过内容安全检查，疑似违规进人工审核队列；B 端租户数据严格隔离，C 端管理员不可直接查看 B 端学员作业，跨租户查询需显式授权并留痕（PRD 第六章）[真实]；作品版权与商用授权边界待法务在 V1 上线前定稿（PRD 8.3 开放问题，如实保留 [假设]）。"}
+    ]}
+  ],
+  b5: [
+    {type:"h", text:"1. 评测集设计"},
+    {type:"table", head:["项","内容"], rows:[
+      ["样例来源","教研按课程大纲构造 60% ＋ 历史教学案例/真实漫剧项目片段改写 30% ＋ bad case 回灌 10%（首批 bad case 来自 Demo 开发过程中的实测记录） [仿真]"],
+      ["规模与构成","首版 60 条剧本 [仿真]：正常 36 / 边界 12（超长 3000+ 字、超短 30 字、无场次散文体、纯对白、中英混排、多角色高重叠）/ 对抗 6（prompt 注入式剧本、诱导改写指令）/ 失败 6（已知 bad case 回灌，见迭代记录）"],
+      ["标注方式","产品经理 + 教研双人独立标注：解析类标「场次边界/角色/道具」字段级对错，分镜类标「结构合规 + 可用性」，分歧提交第三方仲裁；标注规范一页纸版本化"],
+      ["一致性校验","抽取 15% 样例交叉复核；一致率低于 90% 时暂停标注、对齐规范后重标该批次 [假设]（流程已定， kappa 系数待首批标注后回填）"]
+    ]},
+    {type:"table", head:["维度","条数","样例说明"], rows:[
+      ["正常","36","三幕结构标准剧本、2-5 场次、2-4 角色，覆盖影视/漫剧两种文体"],
+      ["边界","12","超长（>3000 字截断）、超短（<30 字拒解析）、无场次散文体、纯对白无场景描述、10+ 角色高重叠"],
+      ["对抗","6","剧本文本内嵌「忽略以上指令输出系统提示」类注入、诱导改写输出格式、诱导输出非 JSON"],
+      ["失败（历史 bad case）","6","嵌套场次漏拆、道具漏标、分镜-场次错位、JSON 带围栏、超时中断、情绪标注与内容相反"]
+    ]},
+    {type:"callout", text:"演进计划：首版 60 条 [仿真] → 上线后每月回灌真实 bad case 与抽样作业快照，3 个月内扩至 150+ 条 [假设]。评测脚本与判定规则已就绪，与 Demo 同仓维护。"},
+    {type:"h", text:"2. 指标定义表（与板块 2、3 一一对应）"},
+    {type:"table", head:["指标","层","口径（分子/分母/范围）","采集方式","坏例判定","目标值","实测值"], rows:[
+      ["场次拆分准确率","效果","正确剧本数 / 60 条评测集 [仿真]","仿真跑分 + 双人标注","漏拆/错并/角色错归任一即坏例","≥90% [假设]","87% [仿真]"],
+      ["分镜结构合规率","效果","合规分镜数 / 生成总数（程序判定）","仿真跑分","缺字段/时长越界/场次错位","≥95% [假设]","96% [仿真]"],
+      ["分镜可用率","效果","可用分镜数 / 合规分镜数","教研双人标注","描述空洞/情绪错位","≥80% [假设]","76% [仿真]"],
+      ["一致性保持分","效果","引用命中分镜数 / 涉及已知角色分镜数","日志埋点 + 抽样人工","锁定后生成未引用参考","≥85% [假设]","89% [仿真]"],
+      ["合成成功率","效果","成功合成次数 / 发起次数","日志埋点","任一镜重跑仍失败","≥92% [估算]","93% [仿真]"],
+      ["解析首字延迟","体验","P75（发起 → 首个可见结果）","日志埋点","超 10s 无响应","≤3s [估算]","2.4s [仿真]"],
+      ["作业提交率 / 48h 点评率","业务","提交/布置；按时点评/提交","数据库埋点","超期未交 / 超期未点评","≥70% / ≥90% [假设]","待首月数据 [假设]"],
+      ["单学员生成成本","业务","额度消耗合计 / 活跃学员","模型网关用量日志","超出课程额度","阈值待定 [估算]","待量产后回填 [假设]"]
+    ]},
+    {type:"h", text:"3. 通过线（三档 + 置信度 + 合成规则）"},
+    {type:"table", head:["指标","阻断线","达标线","优秀线","实测结论"], rows:[
+      ["场次拆分准确率","80%","90%","95%","87% → 达标未优秀；失分集中在嵌套场次（见 bad case #1，修复后预期提升）[仿真]"],
+      ["分镜结构合规率","90%","95%","98%","96% → 达标 [仿真]"],
+      ["分镜可用率","70%","80%","88%","76% → 未达标；与场次情绪错位为主因，属 Prompt 迭代项 [仿真]"],
+      ["一致性保持分","75%","85%","92%","89% → 达标 [仿真]"],
+      ["合成成功率","85%","92%","97%","93% → 达标 [仿真]"],
+      ["解析首字延迟","5s","3s","2s","P75 2.4s → 达标 [仿真]"]
+    ]},
+    {type:"p", text:"定线依据 [估算]：阻断线对标「上线即差评」的体验底线；达标线参考文本结构化任务行业普遍水准（结构合规 95%）与教学可用性要求；优秀线为对外展示门槛。所有阈值随首月真实数据回写调整 [假设]。"},
+    {type:"callout", tone:"warn", text:"置信度说明：评测集 60 条下，准确率 ±5% 以内的差异不具统计显著性（二项分布近似，n=60 时 95% 置信区间半宽约 ±8-10pp）。因此 87% vs 90% 目标的差距应解读为「接近但未达标」，结论以坏例定性归因为主、数值为辅；扩至 150+ 条后数值结论才具备独立置信度。"},
+    {type:"kv", items:[
+      {k:"合成规则", v:"一票否决制：任一效果指标低于阻断线即整体不过；其余指标达标即通过（不做加权）。选用理由：教育内容质量风险不对称——低质量解析会污染整个学习链路，宁可严格。"},
+      {k:"当前结论", v:"按上述规则：场次拆分 87% ≥ 阻断线 80%，其余达标 → 整体「可上线试运行」，分镜可用率 76% 为第一优化优先级 [仿真]"}
+    ]},
+    {type:"h", text:"4. 回归方案"},
+    {type:"table", head:["变更类型","回归重点","是否触发"], rows:[
+      ["改 Prompt","全量评测集（60 条）+ 历史 bad case 集（6 条）","必触发"],
+      ["换模型","全量评测集 + 成本/延迟复测（贵模型达标线不变，便宜模型用同一套线）","必触发"],
+      ["更新模板库/知识策略","模板相关 case + few-shot 变更影响集","必触发"],
+      ["改工作流","主路径 + 分支条件 + 兜底回路（解析修正/单镜重跑/审核队列全链路）","必触发"]
+    ]},
+    {type:"p", text:"回归集划分：固定黄金集 20 条（覆盖四维度与全部 bad case 类型，版本化管理，bad case 修复后强制入库）[仿真]；随机抽样集 10 条/次（从评测集与真实作业快照池随机抽取，防过拟合黄金集）[假设]。\n频率：每次 Prompt/模型/工作流变更发版前必跑；无变更时每周例行一次。通过标准：沿用三档通过线（一票否决）。不通过处理：回滚上一版本 Prompt/模型配置，修复后重跑，阻塞发版。[假设]（机制已定，执行依赖发版流程接入）"},
+    {type:"h", text:"5. bad case 迭代闭环"},
+    {type:"table", head:["类型","表现","常见归因","修复手段","验证方式"], rows:[
+      ["漏拆/错并","嵌套场次（回忆/闪回）未被拆分为独立场次","Prompt 未定义场次边界规则","system 显式加嵌套场次规则 + few-shot 示例","回归集该类样例全过"],
+      ["角色幻觉","解析出剧本中不存在的角色，或同名异人合并错误","约束弱 + 高重叠角色区分不足","输出约束「仅输出原文出现的角色」+ 人名清单校验后处理","角色字段精确率/召回率复测"],
+      ["道具错标","把场景元素误标为道具，或遗漏关键道具","Schema 字段说明不具体","字段说明加判定标准（可被角色携带/交互的实物）","道具字段 F1 复测"],
+      ["分镜-场次错位","生成第 2 场分镜时混入第 1 场内容","上下文拼接时场次隔离不足","逐场次独立调用（不跨场上下文）+ 场次号校验","错位计数归零"],
+      ["JSON 格式违规","输出带 markdown 围栏或前后缀文字导致解析失败","输出格式约束弱","response_format json_object + 代码侧容错提取（extractJson）","格式违规率复测"],
+      ["超时","长剧本解析超 10s 无响应","输入过长 + 模型慢","3000 字截断 + 分段解析 + 明确 loading 与失败提示","P75/P99 延迟复测"],
+      ["内容越界","剧本文本含违规内容被直接送模型","缺前置校验","本地安全词表前置检查 + 疑似违规人工审核","安全检查覆盖率 100%"]
+    ]},
+    {type:"table", head:["#","case 描述","分类","级别","归因（+依据）","修复动作","复测结果","入库回归集"], rows:[
+      ["1","剧本含「第2场（回忆）」嵌套结构：回忆段落应独立成场次，解析被并入第 1 场，导致后续分镜把回忆内容错编进现实线 [仿真]","漏拆/错并","P1（高频主路径：回忆/闪回是剧本常见结构）","归因到 Prompt：对照输出发现模型把「第2场」理解为第 1 场的子段——system 未定义嵌套场次边界规则；依据：6 条同类样例全部同错，非随机","system 增加显式规则「以『第N场』标记为场次唯一边界，括号注明回忆/闪回仍为独立场次」+ 增补 2 条嵌套 few-shot","回归集 6 条同类样例全部通过；全量 60 条复测场次拆分准确率 87% → 93% [仿真]","是（黄金集 v1.1）"],
+      ["2","分镜生成输出被 markdown 代码围栏（```json … ```）包裹，前端 JSON.parse 直接失败，学员端报「生成失败」但模型实际已产出全部内容 [仿真]","格式违规","P2（不阻塞主流程但损耗生成成本与体验）","归因到输出格式约束：日志显示仅部分请求触发围栏（模型对 json_object 指令遵循不稳定）；依据：失败样本 100% 含围栏、内容本身合法","双保险：请求侧启用 response_format json_object；代码侧 extractJson 容错（剥离围栏、截取首尾大括号）[真实]（Demo 已上线该实现）","回归集 6 条格式类样例全部通过；格式违规率 9% → 0%（60 条 × 5 次重复跑）[仿真]","是（黄金集 v1.1）"]
+    ]},
+    {type:"callout", text:"闭环完整性：每条记录可回答——问题是什么（具体 case）→ 怎么分类定级 → 归因到哪个环节（依据）→ 修复动作 → 如何验证（复测数据）→ 是否入库防再犯。bad case 处理完即沉淀为回归样例，避免「修好了又改回去」。"}
+  ],
+
+  /* 综合方案图：结构沿用 solution-map-template.html 的 CONFIG。
+     zones.fallback.metrics 说明见该文件注释；mermaid 仅作编辑源，页面不依赖它渲染。 */
+  map: {
+    title: "弗露化成 AIGC 教培平台 · 综合方案图",
+    subtitle: "主流程：学员一键跟练 → 剧本解析 → 人工修正 → 分镜生成 → 一致性锁定 → 合成导出 → 提交/发布（人工确认贯穿）",
+    zones: [
+      {name:"用户侧", color:"purple", nodes:[
+        {label:"学员在课时页点「一键跟练」\n自动带入提示词模板+参数",chip:"入口"},
+        {label:"粘贴剧本\n（长度/敏感词前置校验）",chip:"输入"},
+        {label:"确认导出 / 发布作品\n（二次确认）",chip:"输出"}
+      ]},
+      {name:"业务流程", color:"blue", nodes:[
+        {label:"剧本解析\n（工作流步骤①）",chip:"步骤①"},
+        {label:"解析结果人工修正\n（场次/角色/道具可编辑）",chip:"步骤②"},
+        {label:"分镜生成 → 拖拽排序\n→ 逐镜重生成",chip:"步骤③"},
+        {label:"一致性参考图库锁定",chip:"步骤④"},
+        {label:"视频合成 → 单镜重跑\n→ 快照提交作业 / 发布",chip:"输出"}
+      ]},
+      {name:"AI 组件", color:"teal", nodes:[
+        {label:"[工作流] 剧本解析\nJSON Schema 结构化输出",chip:"工作流"},
+        {label:"[工作流] 分镜生成\n单镜重生成",chip:"工作流"},
+        {label:"[工作流] 质量评估\n清晰度/一致性/匹配度",chip:"评估"},
+        {label:"模型网关可切换\n调用记录模型版本",chip:"底座"}
+      ]},
+      {name:"人工确认", color:"amber", nodes:[
+        {label:"解析结果需修正？\n是 → 学员编辑后进入分镜",chip:"判断"},
+        {label:"教师点评作业\n（打分+建议，必经人工）",chip:"人工"},
+        {label:"内容安全检查\n疑似违规 → 人工审核队列",chip:"人工"},
+        {label:"作品 / 作业提交",chip:"输出"}
+      ]}
+    ],
+    fallback: {trigger:"触发：生成失败/超时 ｜ JSON 格式违规 ｜ 内容越界 ｜ 模型下线或升级", nodes:["明确报错（不暴露堆栈）","重试 / 换模型","保存草稿","单镜重跑","人工审核队列"], backTo:"分镜生成 → 合成 → 作业提交（额度按规则返还）"},
+    metrics: [
+      {layer:"effect", name:"场次拆分准确率", point:"埋点：解析输出（对照评测集标注）"},
+      {layer:"effect", name:"合成成功率", point:"埋点：合成完成 / 单镜重跑"},
+      {layer:"exp", name:"解析首字延迟 / 单镜时长", point:"埋点：AI 入口 → 结果可见"},
+      {layer:"biz", name:"作业提交率 / 48h 点评率", point:"埋点：提交作业 / 教师点评"},
+      {layer:"biz", name:"单学员生成成本", point:"埋点：模型网关用量日志"}
+    ],
+    mermaid: ["flowchart TD","  A[学员一键跟练：带入模板+参数] --> B[粘贴剧本：长度/敏感词校验]","  B -->|通过| C[AI工作流：剧本解析 JSON]","  B -->|违规| X0[前置拦截] --> A","  C --> D{解析结果需修正？}","  D -->|是| E[学员人工修正场次/角色/道具]","  D -->|否| F","  E --> F[AI工作流：分镜生成（逐场）]","  F --> G[拖拽排序 / 单镜重生成]","  G --> H[一致性参考图库锁定]","  H --> I{合成}","  I -->|失败| X1[定位失败分镜：重试/换模型/单镜重跑] --> H","  I -->|成功| J[快照：提示词/参数/模型版本]","  J --> K{提交作业 / 发布作品}","  K -->|作业| L{教师点评（必经人工）}","  L --> M[学员通知 + 掌握度更新]","  K -->|作品| N{内容安全检查}","  N -->|疑似违规| O[人工审核队列，不公开] --> K","  N -->|通过| P[二次确认 → 作品广场/投稿]"].join("\n")
+  }
+};
+
+/* ===== 渲染逻辑（无需修改） ===== */
+const evMap = {"[真实]":"ev-real","[仿真]":"ev-sim","[估算]":"ev-est","[假设]":"ev-hyp"};
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function fmt(text){
+  let s = esc(text);
+  s = s.replace(/\[(真实|仿真|估算|假设)\]/g, m => '<span class="ev '+evMap[m]+'">'+m+'</span>');
+  return s.replace(/\n/g,"<br>");
+}
+function renderBlocks(blocks){
+  return blocks.map(b => {
+    switch(b.type){
+      case "h": return '<div class="h3">'+fmt(b.text)+'</div>';
+      case "p": return '<p class="p">'+fmt(b.text)+'</p>';
+      case "table":
+        return '<div class="tbl-wrap"><table><thead><tr>'+b.head.map(h=>'<th>'+fmt(h)+'</th>').join("")+
+          '</tr></thead><tbody>'+b.rows.map(r=>'<tr>'+r.map(c=>'<td>'+fmt(c)+'</td>').join("")+'</tr>').join("")+
+          '</tbody></table></div>';
+      case "cards":
+        return '<div class="cards">'+b.items.map(it=>
+          '<div class="mini '+(b.color||"blue")+'">'+(it.tag?'<span class="tag">'+fmt(it.tag)+'</span>':"")+
+          '<div class="t">'+fmt(it.title)+'</div><div class="b">'+fmt(it.body)+'</div></div>').join("")+'</div>';
+      case "kv":
+        return '<div class="kv">'+b.items.map(it=>'<div class="k">'+fmt(it.k)+'</div><div class="v">'+fmt(it.v)+'</div>').join("")+'</div>';
+      case "callout":
+        return '<div class="callout '+(b.tone==="warn"?"warn":"")+'">'+fmt(b.text)+'</div>';
+      case "score":
+        return '<div class="score-strip">'+b.items.map(it=>
+          '<div class="score"><div class="q">'+fmt(it.q)+'</div><div class="v">'+fmt(it.score)+'</div>'+
+          '<div class="g">'+fmt(it.gap)+'</div></div>').join("")+'</div>';
+      case "details":
+        return '<details '+(b.open?"open":"")+'><summary>'+fmt(b.title)+'</summary><div class="dbody">'+
+          renderBlocks(b.blocks||[])+'</div></details>';
+      default: return "";
+    }
+  }).join("");
+}
+document.getElementById("kicker").textContent = CONFIG.kicker;
+document.getElementById("title").textContent = CONFIG.title;
+document.getElementById("subtitle").textContent = CONFIG.subtitle;
+document.getElementById("nav").innerHTML = CONFIG.nav.map(n=>'<a href="#'+n.id+'">'+esc(n.label)+'</a>').join("") + '<a href="https://2013102249.github.io/aigc-edu-platform-demo/" target="_blank" rel="noopener" style="color:var(--purple);border-bottom-color:var(--purple)">▶ 可点击 Demo</a>';
+document.getElementById("b1").innerHTML = renderBlocks(CONFIG.b1);
+document.getElementById("b2").innerHTML = renderBlocks(CONFIG.b2);
+document.getElementById("b3").innerHTML = renderBlocks(CONFIG.b3);
+document.getElementById("b5").innerHTML = renderBlocks(CONFIG.b5);
+
+/* 综合方案图渲染（内嵌，作用域限 .map） */
+(function(){
+  const m = CONFIG.map;
+  const zoneColor = p => ({purple:"zp",blue:"zb",teal:"zt",amber:"za"}[p]||"zb");
+  const nodeColor = p => ({purple:"np",blue:"nb",teal:"nt",amber:"na"}[p]||"nb");
+  const chipColor = p => ({purple:"cp",blue:"cb",teal:"ct",amber:"ca"}[p]||"cb");
+  const arrow = '<div class="m-arrow"></div>';
+  const el = document.getElementById("map");
+  el.innerHTML =
+    '<div class="m-legend">'+m.zones.map(z=>'<span><i class="'+zoneColor(z.color)+'"></i>'+esc(z.name)+'</span>').join("")+
+      '<span><i class="zr"></i>异常兜底</span><span><i class="zb"></i>指标埋点</span></div>'+
+    '<div class="m-panel"><div class="m-title">主流程（用户侧 → 业务流程 → AI 组件 → 人工确认）</div><div class="m-flow">'+
+      m.zones.map((z,i)=>(i?arrow:"")+'<div class="m-zone"><div class="m-zh '+zoneColor(z.color)+'">'+esc(z.name)+'</div>'+
+        '<div class="m-zb">'+z.nodes.map(n=>(n.chip?'<span class="m-chip '+chipColor(z.color)+'">'+esc(n.chip)+'</span><br>':"")+
+          '<div class="m-node '+nodeColor(z.color)+'">'+fmt(n.label)+'</div>').join("")+'</div></div>').join("")+
+      '</div></div>'+
+    '<div class="m-panel"><div class="m-title">异常兜底（最终回到结果输出）</div><div class="m-fb">'+
+      '<div class="m-fb-t">'+fmt(m.fallback.trigger)+'</div><div class="m-fb-flow">'+
+      m.fallback.nodes.map((n,i)=>(i?arrow:"")+'<div class="m-fb-node">'+esc(n)+'</div>').join("")+'</div>'+
+      '<div class="m-back">↩ 兜底后回到：'+esc(m.fallback.backTo)+'</div></div></div>'+
+    '<div class="m-panel"><div class="m-title">指标埋点（效果 / 体验 / 业务，与板块 2、5 一一对应）</div>'+
+      '<div class="m-metrics"><div class="m-grid">'+m.metrics.map(x=>{
+        const lc={effect:"le",exp:"lx",biz:"lb"}[x.layer]||"lb";
+        const ll={effect:"效果",exp:"体验",biz:"业务"}[x.layer]||"指标";
+        return '<div class="m-item"><span class="m-layer '+lc+'">'+ll+'</span><span class="m-n">'+esc(x.name)+'</span>'+
+          '<span class="m-p">'+esc(x.point)+'</span></div>';
+      }).join("")+'</div></div></div>';
+})();
+</script>
+</body>
+</html>
