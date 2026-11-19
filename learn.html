@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学习中心 · 弗露化成 AIGC 教培平台</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<script src="assets/js/demo-mode.js"></script>
+<script src="assets/js/app.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="learn.html#/dashboard"><div class="brand-logo">弗</div>AIGC 教培平台 · 学习中心</a>
+    <div class="spacer"></div>
+    <nav class="nav-links">
+      <a href="index.html">官网</a><a href="#/workbench">AI 工作台</a><a href="#/works">作品广场</a>
+      <a href="#/me" id="nav-me">我的</a>
+    </nav>
+    <span class="badge" id="user-badge">…</span>
+  </div>
+</div>
+
+<div class="app-shell">
+  <aside class="side" id="side"></aside>
+  <main class="main" id="view"><div class="loading"><span class="spin"></span>正在加载学习中心…</div></main>
+</div>
+
+<nav class="bottom-nav" id="bottom-nav">
+  <a href="#/dashboard" data-bkey="dashboard"><span class="ico">📊</span>仪表盘</a>
+  <a href="#/courses" data-bkey="courses"><span class="ico">📚</span>课程</a>
+  <a href="#/workbench" data-bkey="workbench"><span class="ico">🛠️</span>工作台</a>
+  <a href="#/works" data-bkey="works"><span class="ico">🖼️</span>广场</a>
+  <a href="#/me" data-bkey="me"><span class="ico">👤</span>我的</a>
+</nav>
+<script src="assets/js/workbench.js"></script>
+<script src="assets/js/learn.js"></script>
+</body>
+</html>

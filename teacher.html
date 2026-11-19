@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教师端 · 弗露化成 AIGC 教培平台</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<script src="assets/js/demo-mode.js"></script>
+<script src="assets/js/app.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="teacher.html"><div class="brand-logo">弗</div>AIGC 教培平台 · 教师端</a>
+    <div class="spacer"></div>
+    <span class="badge" id="user-badge">…</span>
+    <button class="btn ghost sm" onclick="logout()">退出</button>
+  </div>
+</div>
+<div class="app-shell">
+  <aside class="side">
+    <div class="side-group">教学</div>
+    <a class="active" data-key="review" href="#/review">📋 作业批改工作台</a>
+    <a data-key="board" href="#/board">📈 学员进度看板</a>
+    <a data-key="templates" href="#/templates">💡 提示词模板库</a>
+    <a data-key="live" href="#/live">📺 直播管理</a>
+  </aside>
+  <main class="main" id="view"><div class="loading"><span class="spin"></span>加载中…</div></main>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const view = () => document.getElementById('view');
+let ME = null, SESSION = null, REVIEW_TPLS = [
+  '构图与主体表现到位，建议在光影层次上再强化对比，可用边缘光提升立体感。',
+  '提示词结构完整，参数选择合理。画面与分镜描述匹配度高，继续保持。',
+  '角色一致性控制有效，跨镜特征稳定。台词节奏可再紧凑一些。',
+  '成片节奏流畅，字幕与配乐匹配。建议导出前统一调色风格。',
+  '本次作业未达到课程要求：画面与分镜描述偏差较大，请对照分镜逐镜修改后重交。',
+];
+
+(async function boot() {
+  SESSION = await requireSession();
+  if (!SESSION) { location.href = 'auth.html'; return; }
+  ME = await ensureProfile(SESSION.user);
+  if (!ME || !['teacher', 'admin'].includes(ME.role)) {
+    view().innerHTML = '<div class="empty"><div class="ico">🔒</div>该页面仅教师 / 管理员可访问<div class="mt16"><a class="btn" href="learn.html">返回学习中心</a></div></div>';
+    $('user-badge').textContent = ME ? (ME.nickname || '') + ' · 学员' : '';
+    return;
+  }
+  $('user-badge').textContent = (ME.nickname || '') + ' · ' + (ME.role === 'admin' ? '管理员' : '教师');
+  window.addEventListener('hashchange', route);
+  route();
+})();
+async function logout() { await cloud.auth.signOut(); location.href = 'auth.html'; }
+
+function markSide(key) { document.querySelectorAll('.side a').forEach(a => a.classList.toggle('active', a.dataset.key === key)); }
+async function route() {
+  const key = (location.hash.replace(/^#\//, '') || 'review').split('/')[0];
+  markSide(key);
+  view().innerHTML = '<div class="loading"><span class="spin"></span>加载中…</div>';
+  try {
+    if (key === 'review') await vReview();
+    else if (key === 'board') await vBoard();
+    else if (key === 'templates') await vTemplates();
+    else if (key === 'live') await vLive();
+    else await vReview();
+  } catch (e) {
+    console.error('[teacher] view error:', e && e.message);
+    view().innerHTML = `<div class="empty"><div class="ico">⚠️</div>${esc(e.message || '加载失败')}</div>`;
+  }
+}
+
+/* ============ 作业批改工作台 ============ */
+async function vReview() {
+  const [subsRes, lessonsRes, coursesRes] = await Promise.all([
+    cloud.database.from('submissions').select('*').order('created_at', { ascending: false }),
+    cloud.database.from('lessons').select('id, title, course_id').eq('status', 'published'),
+    cloud.database.from('courses').select('id, title'),
+  ]);
+  const subs = subsRes.data || [];
+  const lMap = {}, cMap = {};
+  (lessonsRes.data || []).forEach(l => lMap[l.id] = l);
+  (coursesRes.data || []).forEach(c => cMap[c.id] = c);
+  const pending = subs.filter(s => s.status !== 'reviewed');
+  const done = subs.filter(s => s.status === 'reviewed');
+
+  view().innerHTML = `
+    <h2 style="font-weight:900;font-size:22px">作业批改工作台</h2>
+    <p class="muted small mt8">批改效率目标：单条作业从打开到提交点评 ≤ 3 分钟（不含长文案）。支持常用评语模板、快照复现与成绩评定。</p>
+    <div class="grid c4 mt16">
+      <div class="stat"><div class="num">${subs.length}</div><div class="lbl">累计提交</div></div>
+      <div class="stat"><div class="num">${pending.length}</div><div class="lbl">待批改</div></div>
+      <div class="stat"><div class="num">${done.length}</div><div class="lbl">已点评</div></div>
+      <div class="stat"><div class="num">${subs.length && done.length ? Math.round(done.filter(s => s.reviewed_at && s.created_at && (new Date(s.reviewed_at) - new Date(s.created_at)) <= 48 * 3600e3).length / done.length * 100) + '%' : '-'}</div><div class="lbl">48h 点评率</div></div>
+    </div>
+
+    <div class="card mt16">
+      <div class="card-title">📥 待批改 <span class="hint">提交后 48 小时内完成点评</span></div>
+      ${pending.length ? pending.map(s => reviewRow(s, lMap, cMap)).join('') : '<div class="empty"><div class="ico">🎉</div>全部批改完毕</div>'}
+    </div>
+    <div class="card">
+      <div class="card-title">✅ 已点评</div>
+      ${done.length ? done.map(s => `
+        <div style="padding:12px 0;border-bottom:1px solid #F2F0FA">
+          <div class="flex jcb aic" style="flex-wrap:wrap;gap:8px">
+            <div><b class="small">${esc((cMap[s.course_id] || {}).title || '-')} · ${esc((lMap[s.lesson_id] || {}).title || '-')}</b>
+              <div class="muted small mt8">${esc(s.owner_name || '学员')} · ${esc(s.title || '')} · 提交于 ${fmtTime(s.created_at)}</div></div>
+            <div class="flex aic gap8"><span class="badge green">已点评</span><span class="badge">${s.score != null ? s.score + ' 分' : '-'}</span></div>
+          </div>
+          ${s.feedback ? `<div class="small mt8" style="background:#F8F7FD;border-radius:10px;padding:10px 12px">点评：${esc(s.feedback)}</div>` : ''}
+        </div>`).join('') : '<div class="empty">暂无已点评记录</div>'}
+    </div>`;
+}
+function reviewRow(s, lMap, cMap) {
+  const snap = s.snapshot || {};
+  return `
+  <div style="border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px" id="rv-${s.id}">
+    <div class="flex jcb aic" style="flex-wrap:wrap;gap:8px">
+      <div><b class="small">${esc((cMap[s.course_id] || {}).title || '-')} · ${esc((lMap[s.lesson_id] || {}).title || '-')}</b>
+        <div class="muted small mt8">${esc(s.owner_name || '学员')} · 提交于 ${fmtTime(s.created_at)} · ${esc(s.title || '')}</div></div>
+      <span class="badge orange">待点评</span>
+    </div>
+    ${s.content ? `<div class="small mt8">学员说明：${esc(s.content)}</div>` : ''}
+    <div class="sub-detail">
+      <b class="small mt16" style="display:block">生成快照（老师可复现当时环境）</b>
+      <div class="snap-grid">
+        <div class="snap-box"><div class="k">模型版本</div><div class="v">${esc(snap.model_version || '-')}</div></div>
+        <div class="snap-box"><div class="k">提交时间</div><div class="v">${esc(snap.submitted_at ? fmtTime(snap.submitted_at) : '-')}</div></div>
+        <div class="snap-box"><div class="k">分镜数</div><div class="v">${Array.isArray(snap.shots) ? snap.shots.length : '-'} 镜</div></div>
+        <div class="snap-box"><div class="k">角色参考库</div><div class="v">${Array.isArray(snap.characters) ? snap.characters.filter(c => (c.refs || []).length).length + '/' + snap.characters.length + ' 已建立' : '-'}</div></div>
+      </div>
+      ${Array.isArray(snap.shots) && snap.shots.length ? `
+        <details><summary class="small link">展开分镜表（${snap.shots.length} 镜）</summary>
+          <div class="mt8">${snap.shots.map((sh, i) => `
+            <div class="render-item"><span class="badge">镜 ${i + 1}</span>
+              <div class="small" style="flex:1">${esc(sh.type || '')} · ${esc(sh.desc || '')} ${sh.line ? '「' + esc(sh.line) + '」' : ''}</div>
+              <span class="muted small">${sh.seconds}s</span></div>`).join('')}
+          </div>
+        </details>` : ''}
+    </div>
+    <div class="quote-tpl">
+      ${REVIEW_TPLS.map(t => `<span class="ref-chip" style="cursor:pointer" onclick="appendQuote('fb-${s.id}', this)" title="${esc(t)}">${esc(t.slice(0, 14))}…</span>`).join('')}
+    </div>
+    <div class="flex gap12 mt8" style="flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:2;min-width:220px">
+        <label class="small" style="font-weight:600;color:var(--ink-2)">点评（支持逐条修改建议）</label>
+        <textarea id="fb-${s.id}" class="input" style="min-height:64px" placeholder="写下点评与修改建议…"></textarea>
+      </div>
+      <div style="flex:0 0 130px">
+        <label class="small" style="font-weight:600;color:var(--ink-2)">分数（0-100）</label>
+        <input id="sc-${s.id}" class="input" type="number" min="0" max="100" value="85">
+      </div>
+      <button class="btn" onclick="submitReview(${s.id})">提交点评</button>
+    </div>
+  </div>`;
+}
+function appendQuote(taId, chip) {
+  const ta = $(taId);
+  const full = chip.getAttribute('title');
+  ta.value = (ta.value ? ta.value + '\n' : '') + full;
+  ta.focus();
+}
+async function submitReview(id) {
+  const fb = $('fb-' + id).value.trim();
+  const score = parseInt($('sc-' + id).value, 10);
+  if (!fb) return toast('请填写点评内容', 'err');
+  if (isNaN(score) || score < 0 || score > 100) return toast('分数需在 0-100 之间', 'err');
+  const bad = contentSafeCheck(fb);
+  if (bad) return toast(bad, 'err');
+  try {
+    const upd = await cloud.database.from('submissions').update({
+      feedback: fb, score, status: 'reviewed', reviewer_name: ME.nickname,
+      reviewed_at: new Date().toISOString(),
+    }).eq('id', id).select();
+    if (!upd.data || !upd.data.length) return toast('没有权限修改该作业或记录不存在', 'err');
+    const sub = upd.data[0];
+    // 通知学员
+    await cloud.database.from('notifications').insert({
+      owner_id: sub.owner_id, title: '作业已点评：' + (sub.title || ''),
+      content: `${ME.nickname} 给你打了 ${score} 分\n点评：${fb}`, type: 'review', ref_id: id,
+    });
+    toast('点评已提交，学员将收到通知', 'ok');
+    route();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+/* ============ 学员进度看板 ============ */
+async function vBoard() {
+  const [coursesRes, progressRes, subsRes, profilesRes, questionsRes, attemptsRes] = await Promise.all([
+    cloud.database.from('courses').select('*').eq('status', 'published'),
+    cloud.database.from('lesson_progress').select('*'),
+    cloud.database.from('submissions').select('*'),
+    cloud.database.from('profiles').select('*'),
+    cloud.database.from('questions').select('id, knowledge_point'),
+    cloud.database.from('practice_attempts').select('*'),
+  ]);
+  const courses = coursesRes.data || [];
+  const students = (profilesRes.data || []).filter(p => p.role === 'student');
+  const qKp = {}; (questionsRes.data || []).forEach(q => qKp[q.id] = q.knowledge_point);
+
+  view().innerHTML = `
+    <h2 style="font-weight:900;font-size:22px">学员进度看板</h2>
+    <p class="muted small mt8">数据延迟 ≤ 24 小时（实时聚合）。点击学员可下钻。</p>
+    <div class="card mt16">
+      <div class="card-title">👥 学员总览 <span class="hint">${students.length} 名学员</span></div>
+      ${students.length ? `<table class="tbl"><thead><tr><th>学员</th><th>完课数</th><th>作业提交</th><th>平均分</th><th>薄弱知识点</th><th></th></tr></thead><tbody>
+        ${students.map(st => {
+          const prog = progressRes.data.filter(p => p.owner_id === st.owner_id && p.completed);
+          const subs = subsRes.data.filter(s => s.owner_id === st.owner_id);
+          const scored = subs.filter(s => s.score != null);
+          const avg = scored.length ? Math.round(scored.reduce((t, s) => t + s.score, 0) / scored.length) : null;
+          const wrong = {};
+          attemptsRes.data.filter(a => a.owner_id === st.owner_id).forEach(a => {
+            if (!a.correct) { const kp = qKp[a.question_id]; if (kp) wrong[kp] = (wrong[kp] || 0) + 1; }
+          });
+          const weak = Object.keys(wrong).sort((a, b) => wrong[b] - wrong[a]).slice(0, 2).join('、') || '-';
+          return `<tr>
+            <td><b class="small">${esc(st.nickname || '学员')}</b></td><td>${prog.length}</td><td>${subs.length}</td>
+            <td>${avg != null ? avg : '-'}</td><td class="small">${esc(weak)}</td>
+            <td><button class="btn sm soft" onclick="toast('下钻视图：${esc(st.nickname || '')} · 完课 ${prog.length} · 作业 ${subs.length}${avg != null ? ' · 均分 ' + avg : ''}')">下钻</button></td>
+          </tr>`;
+        }).join('')}</tbody></table>` : '<div class="empty">暂无学员数据</div>'}
+    </div>
+    <div class="card">
+      <div class="card-title">📊 课程维度（完课率 / 提交率）</div>
+      ${courses.map(c => {
+        const lessonsRes = cloud.database.from('lessons').select('id').eq('course_id', c.id).eq('status', 'published');
+        const total = progressRes.data.filter(p => p.course_id === c.id && p.completed).length;
+        const subsN = subsRes.data.filter(s => s.course_id === c.id).length;
+        return `<div class="bar-row"><span class="bl">${esc(c.title)}</span>
+          <div class="progress-track"><div class="progress-fill" style="width:${Math.min(100, total * 10)}%"></div></div>
+          <span class="bv">${total} 课次</span><span class="badge gray">作业 ${subsN} 份</span></div>`;
+      }).join('') || '<div class="empty">暂无课程</div>'}
+    </div>`;
+}
+
+/* ============ 提示词模板库 ============ */
+async function vTemplates() {
+  const { data } = await cloud.database.from('prompt_templates').select('*').order('created_at', { ascending: false });
+  view().innerHTML = `
+    <div class="flex jcb aic" style="flex-wrap:wrap;gap:10px">
+      <div><h2 style="font-weight:900;font-size:22px">提示词模板库</h2>
+      <p class="muted small mt8">沉淀优秀提示词与参数为模板，学员一键复用；模板带版本号，模型升级后可追溯当时版本。</p></div>
+      <button class="btn" onclick="newTemplate()">＋ 沉淀新模板</button>
+    </div>
+    <div class="grid c3 mt16">
+      ${(data || []).map(t => `
+        <div class="card">
+          <div class="flex jcb aic"><span class="badge">${esc(t.direction)}</span><span class="badge gray">${esc(t.version || 'v1')}</span></div>
+          <h3 style="font-weight:800;font-size:15px;margin-top:10px">${esc(t.title)}</h3>
+          <p class="small muted mt8" style="word-break:break-all;min-height:56px">${esc(t.content)}</p>
+          <div class="flex jcb aic mt8">
+            <span class="muted small">模型 ${esc(t.model_version || '-')}</span>
+            <button class="btn sm soft" onclick="navigator.clipboard && navigator.clipboard.writeText('${esc(t.content).replace(/'/g, '')}').then(()=>toast('模板已复制','ok'))">复制</button>
+          </div>
+        </div>`).join('') || '<div class="empty">暂无模板</div>'}
+    </div>`;
+}
+async function newTemplate() {
+  const title = prompt('模板名称');
+  if (!title) return;
+  const content = prompt('模板内容（提示词，可用 {变量} 占位）');
+  if (!content) return;
+  const version = prompt('版本号', 'v1.0') || 'v1.0';
+  const direction = prompt('适用方向：video / painting / manhua', 'video') || 'video';
+  try {
+    unwrap(await cloud.database.from('prompt_templates').insert({
+      author_id: SESSION.user.id, author_name: ME.nickname, title: title.slice(0, 40),
+      content, version: version.slice(0, 12), direction, model_version: '当前默认模型',
+    }));
+    toast('模板已沉淀', 'ok'); route();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+/* ============ 直播管理 ============ */
+async function vLive() {
+  const { data: lessons } = await cloud.database.from('lessons').select('*').eq('kind', 'live');
+  view().innerHTML = `
+    <h2 style="font-weight:900;font-size:22px">直播管理</h2>
+    <p class="muted small mt8">直播中断自动切回放；学员端实时显示直播状态。（V1 提供开播状态与弹幕通道，屏幕共享 / 连麦在 V1.1 接入）</p>
+    <div class="card mt16">
+      ${(lessons || []).length ? (lessons || []).map(l => `
+        <div class="flex jcb aic" style="padding:12px 0;border-bottom:1px solid #F2F0FA;flex-wrap:wrap;gap:8px">
+          <div><b class="small">${esc(l.title)}</b><div class="muted small mt8">约 ${l.duration_min} 分钟</div></div>
+          <div class="flex aic gap8">
+            <span class="badge ${l.status === 'live' ? 'red' : 'gray'}">${l.status === 'live' ? '● 直播中' : '未开播'}</span>
+            <button class="btn sm ${l.status === 'live' ? 'danger' : ''}" onclick="toggleLive(${l.id},'${l.status === 'live' ? 'published' : 'live'}')">${l.status === 'live' ? '结束直播' : '开播'}</button>
+          </div>
+        </div>`).join('') : `<div class="empty"><div class="ico">📺</div>暂无直播课时<div class="mt8 small">可在管理端把课时的类型设为「直播」</div></div>`}
+    </div>`;
+}
+async function toggleLive(id, status) {
+  try {
+    await cloud.database.from('lessons').update({ status }).eq('id', id);
+    toast(status === 'live' ? '已开播，学员端将显示直播状态' : '直播已结束，回放生成中', 'ok');
+    route();
+  } catch (e) { toast(e.message, 'err'); }
+}
+</script>
+</body>
+</html>

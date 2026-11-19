@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登录 · 弗露化成 AIGC 教培平台</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<script src="assets/js/demo-mode.js"></script>
+<script src="assets/js/app.js"></script>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div>
+      <div class="brand" style="color:#fff"><div class="brand-logo">弗</div>弗露化成 · AIGC 职业技能教培平台</div>
+      <h1 style="font-size:34px;font-weight:900;margin-top:48px;line-height:1.35">学得会 · 用得上 · <span style="background:linear-gradient(90deg,#C4B5FD,#67E8F9);-webkit-background-clip:text;background-clip:text;color:transparent">能变现</span></h1>
+      <p style="color:#B7B5CC;margin-top:14px;font-size:15px">AI 绘画 / AI 视频 / AI 漫剧全链路实训<br>看课—跟练—作业—点评—作品—变现，一个平台闭环。</p>
+      <div style="display:flex;gap:28px;margin-top:44px">
+        <div><div style="font-size:24px;font-weight:900">3 大方向</div><div style="color:#8E8CA8;font-size:13px">绘画 · 影视 · 漫剧</div></div>
+        <div><div style="font-size:24px;font-weight:900">工作台跟练</div><div style="color:#8E8CA8;font-size:13px">剧本→分镜→成片</div></div>
+        <div><div style="font-size:24px;font-weight:900">真实项目</div><div style="color:#8E8CA8;font-size:13px">实战即作品集</div></div>
+      </div>
+    </div>
+    <div style="color:#5E5C77;font-size:12px">© 2026 河南乐智谦教育 · 弗露化成 AIGC 教培平台 V1.0</div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 style="font-size:22px;font-weight:900;margin-bottom:4px">欢迎回来</h2>
+      <p class="muted mb16">登录后按角色进入学习端 / 教师端 / 管理端</p>
+
+      <div class="auth-tabs">
+        <button id="tab-login" class="on" type="button">登录</button>
+        <button id="tab-signup" type="button">注册</button>
+      </div>
+
+      <!-- 登录 -->
+      <div id="pane-login">
+        <div class="field"><label>邮箱</label><input id="li-email" class="input" type="email" placeholder="you@example.com"></div>
+        <div class="field"><label>密码</label><input id="li-pass" class="input" type="password" placeholder="密码"></div>
+        <button id="btn-login" class="btn lg w100">登录</button>
+        <div class="flex jcb mt16 small">
+          <span class="link" id="go-otp">验证码登录</span>
+          <span class="link" id="go-forgot">忘记密码？</span>
+        </div>
+      </div>
+
+      <!-- OTP 登录 -->
+      <div id="pane-otp" style="display:none">
+        <div class="field"><label>邮箱</label><input id="otp-email" class="input" type="email" placeholder="you@example.com"></div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>验证码</label><input id="otp-code" class="input" inputmode="numeric" placeholder="6 位验证码"></div>
+          <div class="field" style="flex:0 0 110px;align-self:flex-end"><button id="btn-otp-send" class="btn ghost w100" type="button">获取验证码</button></div>
+        </div>
+        <button id="btn-otp-login" class="btn lg w100">验证并登录</button>
+        <div class="mt16 small"><span class="link" id="back-pass">使用密码登录</span></div>
+      </div>
+
+      <!-- 注册 -->
+      <div id="pane-signup" style="display:none">
+        <div class="field"><label>邮箱</label><input id="su-email" class="input" type="email" placeholder="you@example.com"></div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>验证码</label><input id="su-code" class="input" inputmode="numeric" placeholder="6 位验证码"></div>
+          <div class="field" style="flex:0 0 110px;align-self:flex-end"><button id="btn-su-send" class="btn ghost w100" type="button">获取验证码</button></div>
+        </div>
+        <div class="field"><label>设置密码（注册必须）</label><input id="su-pass" class="input" type="password" placeholder="至少 6 位"></div>
+        <div class="field"><label>邀请码（选填，教师 / 管理员专用）</label><input id="su-invite" class="input" placeholder="有邀请码请填写"></div>
+        <button id="btn-signup" class="btn lg w100">注册并进入平台</button>
+      </div>
+
+      <!-- 忘记密码 -->
+      <div id="pane-forgot" style="display:none">
+        <div class="field"><label>注册邮箱</label><input id="fg-email" class="input" type="email" placeholder="you@example.com"></div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>邮箱验证码</label><input id="fg-code" class="input" inputmode="numeric" placeholder="6 位验证码"></div>
+          <div class="field" style="flex:0 0 110px;align-self:flex-end"><button id="btn-fg-send" class="btn ghost w100" type="button">获取验证码</button></div>
+        </div>
+        <div class="field"><label>新密码</label><input id="fg-pass" class="input" type="password" placeholder="至少 6 位"></div>
+        <button id="btn-forgot" class="btn lg w100">重置密码</button>
+        <div class="mt16 small"><span class="link" id="back-login">返回登录</span></div>
+      </div>
+
+      <p class="muted small mt24" style="line-height:1.7">登录 / 注册即表示同意《用户协议》与《隐私政策》：你生成的剧本、参考图与作品的所有权和授权边界以协议为准。Web 端当前支持邮箱登录。</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const show = (id, on) => { $(id).style.display = on ? '' : 'none'; };
+
+function setTab(which) {
+  $('tab-login').classList.toggle('on', which === 'login');
+  $('tab-signup').classList.toggle('on', which === 'signup');
+  show('pane-login', which === 'login'); show('pane-otp', false);
+  show('pane-signup', which === 'signup'); show('pane-forgot', false);
+}
+$('tab-login').onclick = () => setTab('login');
+$('tab-signup').onclick = () => setTab('signup');
+$('go-otp').onclick = () => { show('pane-login', false); show('pane-otp', true); };
+$('back-pass').onclick = () => { show('pane-otp', false); show('pane-login', true); };
+$('go-forgot').onclick = () => { show('pane-login', false); show('pane-forgot', true); };
+$('back-login').onclick = () => { show('pane-forgot', false); show('pane-login', true); };
+
+function errText(e) {
+  const m = (e && e.message) || '';
+  if ((e && e.kind === 'invalid_grant') || /invalid/i.test(m)) return '邮箱或密码不正确';
+  if (/already/i.test(m)) return '该邮箱已注册，请直接登录';
+  return m || '操作失败，请稍后重试';
+}
+function busy(btn, on, text) {
+  btn.disabled = on;
+  if (on) { btn.dataset.old = btn.textContent; btn.textContent = text || '处理中…'; }
+  else btn.textContent = btn.dataset.old || btn.textContent;
+}
+
+/* 登录成功 → 建 profile → 按角色跳转 */
+async function afterAuth(user, inviteCode) {
+  const profile = await ensureProfile(user);
+  if (inviteCode) {
+    try {
+      const { data, error } = await cloud.database.rpc('claim_role', { invite_code: inviteCode });
+      if (!error && data && data !== 'student' && profile) {
+        profile.role = data;
+        toast('邀请码已生效，角色：' + data, 'ok');
+      } else if (error) {
+        toast('邀请码无效，已按学员身份进入', 'err');
+      }
+    } catch (e) { toast('邀请码校验失败，已按学员身份进入', 'err'); }
+  }
+  const role = (profile && profile.role) || 'student';
+  toast('登录成功，正在进入…', 'ok');
+  setTimeout(() => { location.href = homeOfRole(role); }, 600);
+}
+
+/* ---- 密码登录 ---- */
+$('btn-login').onclick = async () => {
+  const email = $('li-email').value.trim(), pass = $('li-pass').value;
+  if (!email || !pass) return toast('请输入邮箱和密码', 'err');
+  busy($('btn-login'), true, '登录中…');
+  try {
+    const { data, error } = await cloud.auth.signInWithPassword({ email, password: pass });
+    if (error) return toast(errText(error), 'err');
+    await afterAuth(data.user);
+  } catch (e) { toast('网络异常，请稍后重试', 'err'); }
+  finally { busy($('btn-login'), false); }
+};
+
+/* ---- OTP：发送一次、保存凭据，提交时不再发送 ---- */
+let pendingOtp = null;
+async function sendOtpCommon(email, btn, done) {
+  if (!email) { toast('请先输入邮箱', 'err'); return; }
+  busy(btn, true, '发送中…');
+  try {
+    const sent = await cloud.auth.sendOtp({ email });
+    if (sent.error) { toast(errText(sent.error), 'err'); return; }
+    pendingOtp = { email, verificationId: sent.data.verificationId, isExistingUser: sent.data.isExistingUser };
+    done && done();
+    toast('验证码已发送至邮箱', 'ok');
+  } catch (e) { toast('验证码发送失败，请稍后重试', 'err'); }
+  finally { busy(btn, false); }
+}
+$('btn-otp-send').onclick = () => sendOtpCommon($('otp-email').value.trim(), $('btn-otp-send'));
+$('btn-otp-login').onclick = async () => {
+  const code = $('otp-code').value.trim();
+  const email = $('otp-email').value.trim();
+  if (!pendingOtp || pendingOtp.email !== email) return toast('请先为当前邮箱获取验证码', 'err');
+  if (!code) return toast('请输入验证码', 'err');
+  busy($('btn-otp-login'), true, '验证中…');
+  try {
+    const done = await cloud.auth.verifyOtp({
+      email: pendingOtp.email, verificationId: pendingOtp.verificationId,
+      isExistingUser: pendingOtp.isExistingUser, token: code,
+    });
+    if (done.error) return toast(errText(done.error), 'err');
+    pendingOtp = null;
+    await afterAuth(done.data.user);
+  } catch (e) { toast('验证失败，请重试', 'err'); }
+  finally { busy($('btn-otp-login'), false); }
+};
+
+/* ---- 注册（OTP + 密码 + 可选邀请码） ---- */
+$('btn-su-send').onclick = () => sendOtpCommon($('su-email').value.trim(), $('btn-su-send'));
+$('btn-signup').onclick = async () => {
+  const email = $('su-email').value.trim(), code = $('su-code').value.trim();
+  const pass = $('su-pass').value, invite = $('su-invite').value.trim();
+  if (!pendingOtp || pendingOtp.email !== email) return toast('请先为当前邮箱获取验证码', 'err');
+  if (!code) return toast('请输入验证码', 'err');
+  if (!pass || pass.length < 6) return toast('请设置至少 6 位密码', 'err');
+  busy($('btn-signup'), true, '注册中…');
+  try {
+    const done = await cloud.auth.verifyOtp({
+      email: pendingOtp.email, verificationId: pendingOtp.verificationId,
+      isExistingUser: pendingOtp.isExistingUser, token: code, password: pass,
+    });
+    if (done.error) return toast(errText(done.error), 'err');
+    pendingOtp = null;
+    await afterAuth(done.data.user, invite);
+  } catch (e) { toast('注册失败，请重试', 'err'); }
+  finally { busy($('btn-signup'), false); }
+};
+
+/* ---- 忘记密码 ---- */
+let fgEmail = '';
+$('btn-fg-send').onclick = async () => {
+  const email = $('fg-email').value.trim();
+  if (!email) return toast('请输入注册邮箱', 'err');
+  busy($('btn-fg-send'), true, '发送中…');
+  try {
+    const started = await cloud.auth.resetPasswordForEmail(email);
+    if (started.error) return toast(errText(started.error), 'err');
+    fgEmail = email; window._fgUpdate = started.data.updateUser;
+    toast('重置验证码已发送', 'ok');
+  } catch (e) { toast('发送失败，请稍后重试', 'err'); }
+  finally { busy($('btn-fg-send'), false); }
+};
+$('btn-forgot').onclick = async () => {
+  const code = $('fg-code').value.trim(), pass = $('fg-pass').value;
+  if (!window._fgUpdate) return toast('请先获取重置验证码', 'err');
+  if (!code || !pass || pass.length < 6) return toast('请填写验证码与至少 6 位新密码', 'err');
+  busy($('btn-forgot'), true, '重置中…');
+  try {
+    const done = await window._fgUpdate({ nonce: code, password: pass });
+    if (done.error) return toast(errText(done.error), 'err');
+    toast('密码已重置，请使用新密码登录', 'ok');
+    setTab('login');
+  } catch (e) { toast('重置失败，请重试', 'err'); }
+  finally { busy($('btn-forgot'), false); }
+};
+
+/* 已登录直接跳转 */
+(async () => {
+  captureChannel();
+  const s = await requireSession();
+  if (s) {
+    const p = await currentProfile();
+    location.href = homeOfRole(p && p.role);
+  }
+})();
+</script>
+</body>
+</html>

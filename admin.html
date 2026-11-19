@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理端 · 弗露化成 AIGC 教培平台</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<script src="assets/js/demo-mode.js"></script>
+<script src="assets/js/app.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="admin.html"><div class="brand-logo">弗</div>AIGC 教培平台 · 管理端</a>
+    <div class="spacer"></div>
+    <span class="badge" id="user-badge">…</span>
+    <button class="btn ghost sm" onclick="logout()">退出</button>
+  </div>
+</div>
+<div class="app-shell">
+  <aside class="side">
+    <div class="side-group">运营</div>
+    <a class="active" data-key="dash" href="#/dash">📊 数据看板</a>
+    <a data-key="courses" href="#/courses">📚 课程 / 课时管理</a>
+    <a data-key="questions" href="#/questions">🧠 题库管理</a>
+    <a data-key="coupons" href="#/coupons">🎫 优惠券管理</a>
+    <a data-key="projects" href="#/projects">🎯 实战项目管理</a>
+    <div class="side-group">教务 / B 端</div>
+    <a data-key="students" href="#/students">👥 学员与教务</a>
+    <a data-key="tenants" href="#/tenants">🏢 B 端租户管理</a>
+    <a data-key="leads" href="#/leads">📣 营销线索归因</a>
+  </aside>
+  <main class="main" id="view"><div class="loading"><span class="spin"></span>加载中…</div></main>
+</div>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
