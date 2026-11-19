@@ -404,12 +404,9 @@
   window.cloud = { auth: auth, database: database, llm: llm };
   window.__DEMO_CONFIG = { endpoint: '（演示模式 · 本地数据）', publishableKey: 'demo' };
 
-  /* ---------- 页面注入：横幅 + 快速体验 ---------- */
+  /* ---------- 页面注入：快速体验入口 ---------- */
   var css = document.createElement('style');
   css.textContent = [
-    '.demo-banner{background:linear-gradient(90deg,#FFF7ED,#FEF3C7);border-bottom:1px solid #FDE68A;',
-    'color:#92400E;font-size:12.5px;font-weight:600;padding:7px 14px;text-align:center;}',
-    '.demo-banner a{color:#B45309;text-decoration:underline;margin-left:6px;}',
     '.demo-quick{border:1px dashed #C4B5FD;border-radius:12px;padding:14px 16px;margin-bottom:18px;background:#FAF7FF;}',
     '.demo-quick .t{font-size:13px;font-weight:800;color:#6D28D9;margin-bottom:4px;}',
     '.demo-quick .d{font-size:12px;color:#8E8CA8;margin-bottom:10px;}',
@@ -418,19 +415,13 @@
   document.head.appendChild(css);
 
   function inject() {
-    var full = 'https://aigc-edu-platform.app.workbuddy.host/';
-    var banner = document.createElement('div');
-    banner.className = 'demo-banner';
-    banner.innerHTML = '🧪 演示模式：数据为本地快照（可交互，不会影响线上）。完整云端版 <a href="' + full + '" target="_blank" rel="noopener">aigc-edu-platform.app.workbuddy.host</a>';
-    document.body.insertAdjacentElement('afterbegin', banner);
-
     if (location.pathname.indexOf('auth') !== -1) {
       var card = document.querySelector('.auth-card');
       if (card) {
         var box = document.createElement('div');
         box.className = 'demo-quick';
-        box.innerHTML = '<div class="t">🧪 演示快速体验（免注册）</div>' +
-          '<div class="d">演示模式任意邮箱 + 任意 6 位验证码也可登录；或一键体验：</div>' +
+        box.innerHTML = '<div class="t">⚡ 快速体验（免注册）</div>' +
+          '<div class="d">任选一个身份一键进入；也可使用任意邮箱 + 任意 6 位验证码自行注册。</div>' +
           '<div class="btns">' +
           '<button class="btn sm" data-r="student">学员体验</button>' +
           '<button class="btn sm soft" data-r="teacher">教师体验</button>' +
@@ -443,7 +434,7 @@
           var p = (DB.profiles || []).filter(function (x) { return x.role === r; })[0];
           if (!p) return;
           session = makeSession(p); persistSession();
-          toast && toast('已进入演示身份：' + p.nickname, 'ok');
+          toast && toast('已进入：' + p.nickname, 'ok');
           setTimeout(function () { location.href = window.homeOfRole ? window.homeOfRole(r) : 'learn.html'; }, 400);
         });
       }
